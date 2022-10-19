@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Employee {
+
+    int id;
     String username;
     String password;
     String name;
@@ -11,9 +13,18 @@ public class Employee {
     String phoneNumber;
     List<Ticket> pendingTickets = new ArrayList<>();
 
+    boolean isAdmin;
+
     public Employee(String username, String password) {
         this.username = username;
         this.password = password;
+        isAdmin = false;
+    }
+
+    public Employee(String username, String password, boolean isAdmin) {
+        this.username = username;
+        this.password = password;
+        this.isAdmin = isAdmin;
     }
 
     public Employee(String username, String password, String name, String address, String phoneNumber) {
@@ -70,5 +81,35 @@ public class Employee {
 
     public void setPendingTickets(List<Ticket> pendingTickets) {
         this.pendingTickets = pendingTickets;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+//                ", name='" + name + '\'' +
+//                ", address='" + address + '\'' +
+//                ", phoneNumber='" + phoneNumber + '\'' +
+                ", pendingTickets=" + pendingTickets +
+                ", isAdmin=" + isAdmin +
+                '}';
     }
 }
