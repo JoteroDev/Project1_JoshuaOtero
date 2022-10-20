@@ -15,6 +15,9 @@ public class Employee {
 
     boolean isAdmin;
 
+    public Employee() {
+    }
+
     public Employee(String username, String password) {
         this.username = username;
         this.password = password;

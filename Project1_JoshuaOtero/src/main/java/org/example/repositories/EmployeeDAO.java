@@ -13,7 +13,9 @@ public interface EmployeeDAO {
 
     ArrayList<Ticket> getTicketbyStatus(String status);
 
-    //List<Book> getAllBooks();
+    ArrayList<Ticket> login(Employee employee);
+
+    String employeeGetTickets();
 
    //Book updateBook(Book var1);
 

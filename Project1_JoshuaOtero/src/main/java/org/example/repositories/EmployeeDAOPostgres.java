@@ -1,6 +1,8 @@
 package org.example.repositories;
 
+import org.example.Main;
 import org.example.entities.Employee;
+import org.example.entities.Status;
 import org.example.entities.Ticket;
 import org.example.utils.ConnectionFactory;
 
@@ -11,10 +13,11 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
     @Override
     public Employee createEmployee(Employee employee) {
         try(Connection conn = ConnectionFactory.getConnection()){
-            String sql = "insert into employee values (default, ?, ?, NULL, NULL, NULL)";
+            String sql = "insert into employee values (default, ?, ?, ?, NULL, NULL, NULL)";
             PreparedStatement preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, employee.getUsername());
             preparedStatement.setString(2, employee.getPassword());
+            preparedStatement.setBoolean(3, employee.isAdmin());
 
             preparedStatement.execute();
 
@@ -31,13 +34,16 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
 
     @Override
     public Ticket createTicket(Ticket ticket) {
+        if (Main.currentLoggedEmployee == null){
+            return null;
+        }
         try(Connection conn = ConnectionFactory.getConnection()){
             String sql = "insert into ticket values (default, ?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, ticket.getUser());
+            preparedStatement.setString(1, Main.currentLoggedEmployee.getUsername());
             preparedStatement.setString(2, ticket.getAmount());
             preparedStatement.setString(3, ticket.getDescription());
-            preparedStatement.setString(4, ticket.getStatus());
+            preparedStatement.setString(4, ticket.getStatus().name());
             preparedStatement.setString(5, ticket.getType());
 
             preparedStatement.execute();
@@ -68,7 +74,7 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
                 ticket.setUser(rs.getString("User"));
                 ticket.setAmount(rs.getString("amount"));
                 ticket.setDescription(rs.getString("description"));
-                ticket.setStatus(rs.getString("status"));
+                ticket.setStatus(ticket.getStatus().valueOf(rs.getString("status")));
                 ticket.setType(rs.getString("type"));
                 tickets.add(ticket);
             }
@@ -85,5 +91,118 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public ArrayList<Ticket> login(Employee employee) {
+        try(Connection conn = ConnectionFactory.getConnection()){
+            ArrayList<Ticket> tickets = new ArrayList<>();
+            String sql = "select * from employee where Username = ? and password = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, employee.getUsername());
+            preparedStatement.setString(2, employee.getPassword());
+
+            ResultSet rs = preparedStatement.executeQuery();
+            rs.next();
+
+            Employee verified = new Employee();
+            verified.setId(rs.getInt("employeeid"));
+            verified.setUsername(rs.getString("username"));
+            verified.setAdmin(rs.getBoolean("isadmin"));
+            System.out.println(rs.getBoolean("isadmin"));
+
+            if (verified.isAdmin()){
+                sql = "select * from ticket where Status = ?";
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ps.setString(1, "PENDING");
+
+                rs = ps.executeQuery();
+                while(rs.next()){
+                    Ticket ticket = new Ticket();
+                    ticket.setId(rs.getInt("TicketId"));
+                    ticket.setUser(rs.getString("username"));
+                    ticket.setAmount(rs.getString("amount"));
+                    ticket.setDescription(rs.getString("description"));
+                    ticket.setStatus(ticket.getStatus().valueOf(rs.getString("status")));
+                    ticket.setType(rs.getString("type"));
+                    tickets.add(ticket);
+                }
+                return tickets;
+            } else {
+                sql = "select * from ticket where username = ?";
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ps.setString(1, employee.getUsername());
+
+                rs = ps.executeQuery();
+                while(rs.next()){
+                    Ticket ticket = new Ticket();
+                    ticket.setId(rs.getInt("TicketId"));
+                    ticket.setUser(rs.getString("username"));
+                    ticket.setAmount(rs.getString("amount"));
+                    ticket.setDescription(rs.getString("description"));
+                    ticket.setStatus(ticket.getStatus().valueOf(rs.getString("status")));
+                    ticket.setType(rs.getString("type"));
+                    tickets.add(ticket);
+                }
+                return tickets;
+            }
+
+            //return employee;
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public String employeeGetTickets() {
+        if (Main.currentLoggedEmployee == null){
+            return "Not logged in!";
+        }
+        try(Connection conn = ConnectionFactory.getConnection()){
+            ArrayList<Ticket> tickets = new ArrayList<>();
+            if (Main.currentLoggedEmployee.isAdmin()){
+                String sql = "select * from ticket where Status = ?";
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ps.setString(1, "PENDING");
+
+                ResultSet rs = ps.executeQuery();
+                while(rs.next()){
+                    Ticket ticket = new Ticket();
+                    ticket.setId(rs.getInt("TicketId"));
+                    ticket.setUser(rs.getString("username"));
+                    ticket.setAmount(rs.getString("amount"));
+                    ticket.setDescription(rs.getString("description"));
+                    ticket.setStatus(ticket.getStatus().valueOf(rs.getString("status")));
+                    ticket.setType(rs.getString("type"));
+                    tickets.add(ticket);
+                }
+                return tickets.toString();
+            } else {
+                String sql = "select * from ticket where username = ?";
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ps.setString(1, Main.currentLoggedEmployee.getUsername());
+
+                ResultSet rs = ps.executeQuery();
+                while(rs.next()){
+                    Ticket ticket = new Ticket();
+                    ticket.setId(rs.getInt("TicketId"));
+                    ticket.setUser(rs.getString("username"));
+                    ticket.setAmount(rs.getString("amount"));
+                    ticket.setDescription(rs.getString("description"));
+                    ticket.setStatus(ticket.getStatus().valueOf(rs.getString("status")));
+                    ticket.setType(rs.getString("type"));
+                    tickets.add(ticket);
+                }
+                String jsonString = "";
+                for (int i = 0; i < tickets.size(); i++){
+                    jsonString += tickets.get(i).toString() + "\n\r";
+                }
+                return jsonString;
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+        return "Failed";
     }
 }

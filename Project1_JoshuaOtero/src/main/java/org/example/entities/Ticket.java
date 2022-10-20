@@ -7,7 +7,7 @@ public class Ticket {
     String user;
     String amount;
     String description;
-    String status = "pending";
+    Status status = Status.PENDING;
 
     String type;
 
@@ -38,11 +38,11 @@ public class Ticket {
         this.description = description;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

@@ -38,4 +38,14 @@ public class EmplyeeDAOLocal implements EmployeeDAO{
     public ArrayList<Ticket> getTicketbyStatus(String status) {
         return null;
     }
+
+    @Override
+    public ArrayList<Ticket> login(Employee employee) {
+        return null;
+    }
+
+    @Override
+    public String employeeGetTickets() {
+        return null;
+    }
 }
