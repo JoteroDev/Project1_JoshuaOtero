@@ -26,7 +26,7 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
             int generatedKey = resultSet.getInt("Employeeid");
             employee.setId(generatedKey);
             return employee;
-        } catch(SQLException e){
+        } catch(SQLException|NullPointerException e){
             e.printStackTrace();
         }
         return null;
@@ -53,7 +53,7 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
             int generatedKey = resultSet.getInt("Ticketid");
             ticket.setId(generatedKey);
             return ticket;
-        } catch(SQLException e){
+        } catch(SQLException|NullPointerException e){
             e.printStackTrace();
         }
         return null;

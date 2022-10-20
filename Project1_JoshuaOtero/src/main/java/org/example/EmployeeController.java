@@ -22,10 +22,10 @@ public class EmployeeController {
         Ticket registeredTicket = employeeDAOPostgres.createTicket(ticket);
         if (registeredTicket == null){
             ctx.status(401);
-            ctx.result("Please make sure you are logged in!");
+            ctx.result("Please make sure you are logged in and have entered an Amount, Description, and Type");
         } else {
             ctx.status(201);
-            ctx.result(registeredTicket.toString());
+            ctx.result("Ticket #"+registeredTicket.getId()+ " has been registered!");
         }
 
     };
@@ -40,10 +40,10 @@ public class EmployeeController {
         Employee newEmployee = employeeDAOPostgres.createEmployee(employee);
         if (newEmployee == null) {
             ctx.status(401);
-            ctx.result("Username is taken!");
+            ctx.result("Username is taken or data entered incorrectly!\r\nPlease use the following JSON format\r\n{\r\"username\": \"Desired Username\"\r\n\"password\": \"password\"\r\n}");
         } else {
             ctx.status(201);
-            ctx.result(newEmployee.toString());
+            ctx.result("Employee "+newEmployee.getUsername()+" has been created!");
         }
     };
 
