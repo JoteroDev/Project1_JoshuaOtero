@@ -2,25 +2,21 @@ package org.example;
 
 import io.javalin.Javalin;
 import org.example.entities.Employee;
-import org.example.entities.Ticket;
 import org.example.repositories.EmployeeDAO;
 import org.example.repositories.EmployeeDAOPostgres;
 import org.example.repositories.EmplyeeDAOLocal;
-import org.example.utils.ConnectionFactory;
-
-import java.sql.SQLException;
-import java.util.ArrayList;
 
 public class Main {
     public static EmployeeDAO employeeDAO = new EmplyeeDAOLocal();
     public static Employee currentLoggedEmployee;
     public static void main(String[] args) {
         Javalin app = Javalin.create();
-        TestHandler helloHandler = new TestHandler();
+        EmployeeController helloHandler = new EmployeeController();
         app.post("/createEmployee", helloHandler.createEmployee);
         app.post("/createTicket", helloHandler.createTicket);
         app.post("/login", helloHandler.login);
         app.get("/getTickets", helloHandler.viewTickets);
+        app.get("/changeStatus", helloHandler.viewTickets);
         app.start();
         EmployeeDAOPostgres employeeDAOPostgres = new EmployeeDAOPostgres();
         // Employee employee = new Employee("Joshua Otero", "password");

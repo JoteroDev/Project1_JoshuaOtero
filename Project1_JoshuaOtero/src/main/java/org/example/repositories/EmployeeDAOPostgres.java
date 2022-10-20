@@ -110,7 +110,7 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
             verified.setUsername(rs.getString("username"));
             verified.setAdmin(rs.getBoolean("isadmin"));
             System.out.println(rs.getBoolean("isadmin"));
-
+            Main.currentLoggedEmployee = verified;
             if (verified.isAdmin()){
                 sql = "select * from ticket where Status = ?";
                 PreparedStatement ps = conn.prepareStatement(sql);
@@ -162,10 +162,9 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
         try(Connection conn = ConnectionFactory.getConnection()){
             ArrayList<Ticket> tickets = new ArrayList<>();
             if (Main.currentLoggedEmployee.isAdmin()){
-                String sql = "select * from ticket where Status = ?";
+                String sql = "select * from ticket where status = ?";
                 PreparedStatement ps = conn.prepareStatement(sql);
                 ps.setString(1, "PENDING");
-
                 ResultSet rs = ps.executeQuery();
                 while(rs.next()){
                     Ticket ticket = new Ticket();
@@ -177,7 +176,11 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
                     ticket.setType(rs.getString("type"));
                     tickets.add(ticket);
                 }
-                return tickets.toString();
+                String jsonString = "";
+                for (int i = 0; i < tickets.size(); i++){
+                    jsonString += tickets.get(i).toString() + "\n\r";
+                }
+                return jsonString;
             } else {
                 String sql = "select * from ticket where username = ?";
                 PreparedStatement ps = conn.prepareStatement(sql);
@@ -204,5 +207,15 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
             e.printStackTrace();
         }
         return "Failed";
+    }
+
+    @Override
+    public String changeStatus() {
+        if (Main.currentLoggedEmployee == null){
+            return "Not logged in!";
+        } else if(!Main.currentLoggedEmployee.isAdmin()){
+            return "You don't have permission to edit these!";
+        }
+        return null;
     }
 }

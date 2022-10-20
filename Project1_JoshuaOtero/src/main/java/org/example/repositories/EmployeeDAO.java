@@ -17,6 +17,8 @@ public interface EmployeeDAO {
 
     String employeeGetTickets();
 
+    String changeStatus();
+
    //Book updateBook(Book var1);
 
     //boolean deleteBookById(int var1);
