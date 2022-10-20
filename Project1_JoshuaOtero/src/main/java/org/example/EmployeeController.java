@@ -47,6 +47,29 @@ public class EmployeeController {
         }
     };
 
+    public Handler readTicketbyType = (ctx) -> {
+        if (ctx == null) {
+        }
+        String json = ctx.body();
+        Gson gson = new Gson();
+        Ticket ticket = (Ticket) gson.fromJson(json, Ticket.class);
+        EmployeeDAOPostgres employeeDAOPostgres = new EmployeeDAOPostgres();
+        String newTicket = employeeDAOPostgres.readTicketsbyType(ticket.getType());
+        String jsonString = "";
+        if (newTicket.equals("Not logged in!")){
+            jsonString = "Please login first!";
+            ctx.status(401);
+            ctx.result(jsonString);
+        } else if(newTicket.equals("")) {
+            ctx.status(401);
+            ctx.result("No tickets exist with type " + ticket.getType()+".\n\rRemember this input is case-sensitive.");
+        } else {
+            ctx.status(201);
+            ctx.result(newTicket);
+        }
+
+    };
+
     public Handler login = (ctx) -> {
         if (ctx == null) {
         }

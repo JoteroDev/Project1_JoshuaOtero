@@ -19,4 +19,6 @@ public interface EmployeeDAO {
     String employeeGetTickets();
 
     String changeStatus(int ticketID, Status status);
+
+    String readTicketsbyType(String type);
 }

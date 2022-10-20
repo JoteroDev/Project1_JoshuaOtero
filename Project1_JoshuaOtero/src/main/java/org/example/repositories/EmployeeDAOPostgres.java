@@ -71,21 +71,13 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
             while(rs.next()){
                 Ticket ticket = new Ticket();
                 ticket.setId(rs.getInt("TicketId"));
-                ticket.setUser(rs.getString("User"));
+                ticket.setUser(rs.getString("username"));
                 ticket.setAmount(rs.getString("amount"));
                 ticket.setDescription(rs.getString("description"));
                 ticket.setStatus(ticket.getStatus().valueOf(rs.getString("status")));
                 ticket.setType(rs.getString("type"));
                 tickets.add(ticket);
             }
-
-//            Ticket ticket = new Ticket();
-//            ticket.setId(rs.getInt("TicketId"));
-//            ticket.setUser(rs.getString("User"));
-//            ticket.setAmount(rs.getString("amount"));
-//            ticket.setDescription(rs.getString("description"));
-//            ticket.setStatus(rs.getString("status"));
-//            ticket.setType(rs.getString("type"));
             return tickets;
         } catch(SQLException e){
             e.printStackTrace();
@@ -146,7 +138,7 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
                 }
                 return tickets;
             }
-            
+
         } catch(SQLException e){
             e.printStackTrace();
         }
@@ -245,6 +237,64 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
         } catch(SQLException e){
             e.printStackTrace();
         }
+        return null;
+    }
+
+    @Override
+    public String readTicketsbyType(String type) {
+        if (Main.currentLoggedEmployee == null){
+            return "Not logged in!";
+        }
+        ArrayList<Ticket> tickets = new ArrayList<>();
+        try(Connection conn = ConnectionFactory.getConnection()){
+            if (Main.currentLoggedEmployee.isAdmin()){
+                String sql = "select * from ticket where type = ? and status = ?";
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ps.setString(1,type);
+                ps.setString(2,"PENDING");
+                ResultSet rs = ps.executeQuery();
+                while(rs.next()){
+                    Ticket ticket = new Ticket();
+                    ticket.setId(rs.getInt("TicketId"));
+                    ticket.setUser(rs.getString("username"));
+                    ticket.setAmount(rs.getString("amount"));
+                    ticket.setDescription(rs.getString("description"));
+                    ticket.setStatus(ticket.getStatus().valueOf(rs.getString("status")));
+                    ticket.setType(rs.getString("type"));
+                    tickets.add(ticket);
+                }
+                String jsonString = "";
+                for (int i = 0; i < tickets.size(); i++){
+                    jsonString += tickets.get(i).toString() + "\n\r";
+                }
+                return jsonString;
+            } else {
+                String sql = "select * from ticket where type = ? and username = ?";
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ps.setString(1,type);
+                ps.setString(2,Main.currentLoggedEmployee.getUsername());
+                ResultSet rs = ps.executeQuery();
+                while(rs.next()){
+                    Ticket ticket = new Ticket();
+                    ticket.setId(rs.getInt("TicketId"));
+                    ticket.setUser(rs.getString("username"));
+                    ticket.setAmount(rs.getString("amount"));
+                    ticket.setDescription(rs.getString("description"));
+                    ticket.setStatus(ticket.getStatus().valueOf(rs.getString("status")));
+                    ticket.setType(rs.getString("type"));
+                    tickets.add(ticket);
+                }
+                String jsonString = "";
+                for (int i = 0; i < tickets.size(); i++){
+                    jsonString += tickets.get(i).toString() + "\n\r";
+                }
+                return jsonString;
+            }
+
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+
         return null;
     }
 }

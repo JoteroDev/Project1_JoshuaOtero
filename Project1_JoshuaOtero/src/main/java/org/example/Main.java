@@ -13,6 +13,7 @@ public class Main {
         app.post("/login", employeeController.login);
         app.get("/getTickets", employeeController.viewTickets);
         app.post("/changeStatus", employeeController.updateTicket);
+        app.post("/getTicketbyType", employeeController.readTicketbyType);
         app.start();
 
 
