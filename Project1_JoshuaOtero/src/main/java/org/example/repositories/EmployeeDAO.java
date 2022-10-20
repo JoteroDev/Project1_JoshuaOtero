@@ -1,6 +1,7 @@
 package org.example.repositories;
 
 import org.example.entities.Employee;
+import org.example.entities.Status;
 import org.example.entities.Ticket;
 
 import java.util.ArrayList;
@@ -17,9 +18,5 @@ public interface EmployeeDAO {
 
     String employeeGetTickets();
 
-    String changeStatus();
-
-   //Book updateBook(Book var1);
-
-    //boolean deleteBookById(int var1);
+    String changeStatus(int ticketID, Status status);
 }

@@ -1,6 +1,7 @@
 package org.example.repositories;
 
 import org.example.entities.Employee;
+import org.example.entities.Status;
 import org.example.entities.Ticket;
 
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public class EmplyeeDAOLocal implements EmployeeDAO{
     }
 
     @Override
-    public String changeStatus() {
+    public String changeStatus(int ticketid, Status status) {
         return null;
     }
 }

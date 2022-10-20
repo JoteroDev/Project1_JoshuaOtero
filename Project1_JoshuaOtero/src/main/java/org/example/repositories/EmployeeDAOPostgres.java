@@ -146,8 +146,7 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
                 }
                 return tickets;
             }
-
-            //return employee;
+            
         } catch(SQLException e){
             e.printStackTrace();
         }
@@ -210,11 +209,41 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
     }
 
     @Override
-    public String changeStatus() {
+    public String changeStatus(int ticketID, Status status) {
         if (Main.currentLoggedEmployee == null){
             return "Not logged in!";
         } else if(!Main.currentLoggedEmployee.isAdmin()){
             return "You don't have permission to edit these!";
+        }
+        try(Connection conn = ConnectionFactory.getConnection()){
+            String sql = "select * from ticket where ticketid = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setInt(1, ticketID);
+            ResultSet resultSets = preparedStatement.executeQuery();
+            resultSets.next();
+            Ticket ticket = new Ticket();
+            ticket.setId(resultSets.getInt("TicketId"));
+            ticket.setStatus(ticket.getStatus().valueOf(resultSets.getString("status")));
+            if (ticket.getStatus().equals(Status.APPROVED)){
+                return "This ticket has already been approved and cannot been changed.";
+            }
+            if (ticket.getStatus().equals(Status.DENIED)){
+                return "This ticket has already been denied and cannot been changed.";
+            }
+
+            sql = "update ticket set status = ? where ticketid = ?";
+            preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, status.name());
+            preparedStatement.setInt(2, ticketID);
+
+            int rs = preparedStatement.executeUpdate();
+            if (rs == 0){
+                return "Failed! Change did not go through!\r\nPlease verify the ticket id and status is correct!";
+            } else {
+                return "Success! Ticket #" + ticketID + " has been updated to " + status;
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
         }
         return null;
     }

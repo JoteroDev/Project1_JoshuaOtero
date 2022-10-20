@@ -18,12 +18,13 @@ public class EmployeeController {
         String json = ctx.body();
         Gson gson = new Gson();
         Ticket ticket = (Ticket) gson.fromJson(json, Ticket.class);
-        ctx.status(201);
         EmployeeDAOPostgres employeeDAOPostgres = new EmployeeDAOPostgres();
         Ticket registeredTicket = employeeDAOPostgres.createTicket(ticket);
         if (registeredTicket == null){
+            ctx.status(401);
             ctx.result("Please make sure you are logged in!");
         } else {
+            ctx.status(201);
             ctx.result(registeredTicket.toString());
         }
 
@@ -38,7 +39,7 @@ public class EmployeeController {
         EmployeeDAOPostgres employeeDAOPostgres = new EmployeeDAOPostgres();
         Employee newEmployee = employeeDAOPostgres.createEmployee(employee);
         if (newEmployee == null) {
-            ctx.status(404);
+            ctx.status(401);
             ctx.result("Username is taken!");
         } else {
             ctx.status(201);
@@ -57,10 +58,11 @@ public class EmployeeController {
         String jsonString = "";
         if (newTicket == null){
             jsonString = "Invalid username or password";
-            ctx.status(201);
+            ctx.status(401);
             ctx.result(jsonString);
         } else if(newTicket.size() == 0) {
             //Main.currentLoggedEmployee = employee;
+            ctx.status(401);
             ctx.result("No tickets");
             } else {
             //Main.currentLoggedEmployee = employee;
@@ -77,10 +79,31 @@ public class EmployeeController {
         }
         String json = ctx.body();
         Gson gson = new Gson();
-        ctx.status(201);
         EmployeeDAOPostgres employeeDAOPostgres = new EmployeeDAOPostgres();
         String tickets = employeeDAOPostgres.employeeGetTickets();
+        if (tickets.equals("Not logged in!")){
+            ctx.status(401);
+        } else{
+            ctx.status(201);
+        }
         ctx.result(tickets);
+    };
+
+    public Handler updateTicket = (ctx) -> {
+        if (ctx == null) {
+        }
+        String json = ctx.body();
+        Gson gson = new Gson();
+        Ticket ticket = (Ticket) gson.fromJson(json, Ticket.class);
+        EmployeeDAOPostgres employeeDAOPostgres = new EmployeeDAOPostgres();
+        String newEmployee = employeeDAOPostgres.changeStatus(ticket.getId(), ticket.getStatus());
+        if (newEmployee == null) {
+            ctx.status(401);
+            ctx.result("Username is taken!");
+        } else {
+            ctx.status(201);
+            ctx.result(newEmployee.toString());
+        }
     };
 
 }
