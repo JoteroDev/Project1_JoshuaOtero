@@ -40,11 +40,14 @@ public class TestHandler{
         Gson gson = new Gson();
         Employee employee = (Employee) gson.fromJson(json, Employee.class);
         EmployeeDAOPostgres employeeDAOPostgres = new EmployeeDAOPostgres();
-        employeeDAOPostgres.createEmployee(employee);
-        Employee registeredEmployee = Main.employeeDAO.createEmployee(employee);
-        String employeeJson = gson.toJson(registeredEmployee);
-        ctx.status(201);
-        ctx.result(employeeJson);
+        Employee newEmployee = employeeDAOPostgres.createEmployee(employee);
+        if (newEmployee == null) {
+            ctx.status(404);
+            ctx.result("Username is taken!");
+        } else {
+            ctx.status(201);
+            ctx.result(newEmployee.toString());
+        }
     };
 
     public Handler login = (ctx) -> {
