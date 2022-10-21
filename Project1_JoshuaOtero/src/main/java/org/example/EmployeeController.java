@@ -129,4 +129,22 @@ public class EmployeeController {
         }
     };
 
+    public Handler updateAdmin = (ctx) -> {
+        if (ctx == null) {
+        }
+        //TODO: Finish Admin
+        String json = ctx.body();
+        Gson gson = new Gson();
+        Employee employee = (Employee) gson.fromJson(json, Employee.class);
+        EmployeeDAOPostgres employeeDAOPostgres = new EmployeeDAOPostgres();
+        String newEmployee = employeeDAOPostgres.changeStatus(ticket.getId(), ticket.getStatus());
+        if (newEmployee == null) {
+            ctx.status(401);
+            ctx.result("Username is taken!");
+        } else {
+            ctx.status(201);
+            ctx.result(newEmployee.toString());
+        }
+    };
+
 }

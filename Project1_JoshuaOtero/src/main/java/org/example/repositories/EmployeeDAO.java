@@ -21,4 +21,6 @@ public interface EmployeeDAO {
     String changeStatus(int ticketID, Status status);
 
     String readTicketsbyType(String type);
+
+    String updateAdminPrivilege();
 }
