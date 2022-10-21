@@ -297,4 +297,9 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
 
         return null;
     }
+
+    @Override
+    public String updateAdminPrivilege(Employee employee) {
+        return null;
+    }
 }

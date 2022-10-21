@@ -22,5 +22,5 @@ public interface EmployeeDAO {
 
     String readTicketsbyType(String type);
 
-    String updateAdminPrivilege();
+    String updateAdminPrivilege(Employee employee);
 }

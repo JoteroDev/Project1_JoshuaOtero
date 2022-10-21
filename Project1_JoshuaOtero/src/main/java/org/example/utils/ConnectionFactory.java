@@ -20,7 +20,14 @@ public class ConnectionFactory {
         String username = "postgres";
         String password = "mkolmkol4";
         return DriverManager.getConnection(url, username, password);
+//                String url = System.getenv("POSTGRES_SQL_DB");
+//                String username = System.getenv("DB_USERNAME");
+//                String password = System.getenv("PASSWORD");
+//                try {
+//                    return DriverManager.getConnection(url, username, password);
+//                } catch (SQLException e) {
+//                    throw new RuntimeException(e);
+//                }
     }
-
 
 }

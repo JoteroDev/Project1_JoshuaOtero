@@ -24,20 +24,6 @@ public class Employee {
         isAdmin = false;
     }
 
-    public Employee(String username, String password, boolean isAdmin) {
-        this.username = username;
-        this.password = password;
-        this.isAdmin = isAdmin;
-    }
-
-    public Employee(String username, String password, String name, String address, String phoneNumber) {
-        this.username = username;
-        this.password = password;
-        this.name = name;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
-    }
-
     public String getUsername() {
         return username;
     }
