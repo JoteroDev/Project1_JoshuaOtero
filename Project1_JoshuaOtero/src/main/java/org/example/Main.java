@@ -22,6 +22,7 @@ public class Main {
         app.get("/getTickets", ticketController.viewTickets);
         app.post("/changeStatus", ticketController.updateTicket);
         app.post("/getTicketbyType", ticketController.readTicketbyType);
+        app.post("/updateEmployeeAdmin", employeeController.updateAdmin);
         app.start();
 
 

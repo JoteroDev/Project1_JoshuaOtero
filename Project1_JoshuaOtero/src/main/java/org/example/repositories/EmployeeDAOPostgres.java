@@ -300,6 +300,31 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
 
     @Override
     public String updateAdminPrivilege(Employee employee) {
+        if (Main.currentLoggedEmployee == null){
+            return "Not logged in!";
+        } else if(!Main.currentLoggedEmployee.isAdmin()){
+            return "You don't have permission to edit these!";
+        } else if(employee.getId() == Main.currentLoggedEmployee.getId()){
+            return "You cannot modify your own account!";
+        }
+        try(Connection conn = ConnectionFactory.getConnection()){
+            String sql = "update employee set isadmin = ? where employeeid = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setBoolean(1, employee.isAdmin());
+            preparedStatement.setInt(2, employee.getId());
+            int rs = preparedStatement.executeUpdate();
+            if (rs == 0){
+                return "Failed! Change did not go through!\r\nPlease make sure id# is a valid employee!";
+            } else {
+                if (employee.isAdmin()){
+                    return "Success! Employee #" + employee.getId() + " has been updated to Admin!";
+                } else {
+                    return "Success! Employee #" + employee.getId() + " has been updated to Employee!";
+                }
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
         return null;
     }
 }

@@ -23,7 +23,7 @@ public class EmployeeController {
         EmployeeDAOPostgres employeeDAOPostgres = new EmployeeDAOPostgres();
         Employee newEmployee = Main.employeeService.createEmployee(employee);
         if (newEmployee == null) {
-            ctx.status(401);
+            ctx.status(400);
             ctx.result("Username is taken or data entered incorrectly!\r\nPlease use the following JSON format\r\n{\r\"username\": \"Desired Username\"\r\n\"password\": \"password\"\r\n}");
         } else {
             ctx.status(201);
@@ -44,18 +44,16 @@ public class EmployeeController {
         String jsonString = "";
         if (newTicket == null){
             jsonString = "Invalid username or password";
-            ctx.status(401);
+            ctx.status(406);
             ctx.result(jsonString);
         } else if(newTicket.size() == 0) {
-            //Main.currentLoggedEmployee = employee;
-            ctx.status(401);
+            ctx.status(404);
             ctx.result("No tickets");
             } else {
-            //Main.currentLoggedEmployee = employee;
             for (int i = 0; i < newTicket.size(); i++){
                 jsonString += newTicket.get(i).toString() + "\n\r";
             }
-            ctx.status(201);
+            ctx.status(202);
             ctx.result(jsonString);
         }
     };
@@ -67,15 +65,19 @@ public class EmployeeController {
         Gson gson = new Gson();
         Employee employee = (Employee) gson.fromJson(json, Employee.class);
         EmployeeDAOPostgres employeeDAOPostgres = new EmployeeDAOPostgres();
-        String newEmployee = employeeDAOPostgres.updateAdminPrivilege(employee);
-        if (newEmployee == null) {
-            ctx.status(401);
-            ctx.result("Username is taken!");
-        } else {
-            ctx.status(201);
-            ctx.result(newEmployee.toString());
+        String employeeString = employeeDAOPostgres.updateAdminPrivilege(employee);
+        switch (employeeString){
+            case "Failed! Change did not go through!\r\nPlease make sure id# is a valid employee!":
+                ctx.status(304);
+                break;
+            case "Not logged in!":
+            case "You cannot modify your own account!":
+                ctx.status(401);
+                break;
+            default:
+                ctx.status(202);
         }
-        System.out.println();
+        ctx.result(employeeString);
     };
 
 }

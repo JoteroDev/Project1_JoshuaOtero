@@ -12,9 +12,9 @@ public class EmployeeServiceImpl implements EmployeeService{
     @Override
     public Employee createEmployee(Employee employee) {
         if (employee.getUsername().length() == 0) {
-            throw new RuntimeException("Book's title cannot be empty");
+            throw new RuntimeException("username cannot be empty");
         } else if (employee.getPassword().length() == 0) {
-            throw new RuntimeException("Book's authors cannot be empty");
+            throw new RuntimeException("password cannot be empty");
         } else {
             Employee savedBook = this.employeeDAO.createEmployee(employee);
             return savedBook;
