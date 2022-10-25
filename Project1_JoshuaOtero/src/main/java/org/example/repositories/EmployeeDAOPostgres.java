@@ -222,7 +222,6 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
             if (ticket.getStatus().equals(Status.DENIED)){
                 return "This ticket has already been denied and cannot been changed.";
             }
-
             sql = "update ticket set status = ? where ticketid = ?";
             preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, status.name());
@@ -321,6 +320,51 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
                 } else {
                     return "Success! Employee #" + employee.getId() + " has been updated to Employee!";
                 }
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public String checkIfTicketExistsbyID(int id) {
+        if (Main.currentLoggedEmployee == null){
+            return "Not logged in!";
+        }
+        try(Connection conn = ConnectionFactory.getConnection()){
+            String sql = "select * from ticket where ticketid = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setInt(1, id);
+            ResultSet resultSets = preparedStatement.executeQuery();
+            resultSets.next();
+            Ticket ticket = new Ticket();
+            ticket.setStatus(ticket.getStatus().valueOf(resultSets.getString("status")));
+            if (!Main.currentLoggedEmployee.getUsername().equals(resultSets.getString("username"))){
+                return "You cannot upload images for ticket's that don't belong to you.";
+            } else if (!ticket.getStatus().equals(Status.PENDING)) {
+                return "This ticket was already approved or denied!";
+            } else{
+                return "valid";
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public String updateTicketPicture(int id, byte[] array) {
+        try(Connection conn = ConnectionFactory.getConnection()){
+            String sql = "update ticket set image = ? where ticketid = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setBytes(1, array);
+            preparedStatement.setInt(2, id);
+            int rs = preparedStatement.executeUpdate();
+            if (rs == 0){
+                return "Failed! Change did not go through!\r\nPlease make sure id# is a valid ticket!";
+            } else {
+                return "Success! Picture was uploaded to ticket #"+id;
             }
         } catch(SQLException e){
             e.printStackTrace();

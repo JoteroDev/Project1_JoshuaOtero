@@ -6,6 +6,11 @@ import org.example.Main;
 import org.example.entities.Employee;
 import org.example.entities.Ticket;
 import org.example.repositories.EmployeeDAOPostgres;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.util.ArrayList;
 
 public class EmployeeController {
@@ -78,6 +83,45 @@ public class EmployeeController {
                 ctx.status(202);
         }
         ctx.result(employeeString);
+    };
+
+    public Handler updateTicketPicture = (ctx) -> {
+        if (ctx == null) {
+        }
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        EmployeeDAOPostgres employeeDAOPostgres = new EmployeeDAOPostgres();
+        String employeeString = employeeDAOPostgres.checkIfTicketExistsbyID(id);
+        byte[] array = ctx.bodyAsBytes();
+        if(employeeString == null){
+            ctx.status(400);
+            ctx.result("Not a valid ticket number!");
+        } else {
+            switch (employeeString){
+                case "You cannot upload images for ticket's that don't belong to you.":
+                case "Not logged in!":
+                case "This ticket was already approved or denied!":
+                    ctx.status(400);
+                    ctx.result(employeeString);
+                    break;
+                default:
+                    if (array == null){
+                        ctx.status(400);
+                        ctx.result("No file was detected!");
+                    } else {
+                        ctx.status(200);
+                        employeeString = employeeDAOPostgres.updateTicketPicture(id, array);
+                        // These lines of code create the image and put it into the resources file.
+//                        System.out.println(array);
+//                        ByteArrayInputStream bis = new ByteArrayInputStream(array);
+//                        BufferedImage bImage = ImageIO.read(bis);
+//                        ImageIO.write(bImage, "jpg", new File("ticketExample.jpg"));
+                        ctx.result(employeeString);
+                    }
+
+            }
+        }
+
+
     };
 
 }

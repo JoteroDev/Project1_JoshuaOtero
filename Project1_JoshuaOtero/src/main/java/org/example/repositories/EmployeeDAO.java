@@ -23,4 +23,8 @@ public interface EmployeeDAO {
     String readTicketsbyType(String type);
 
     String updateAdminPrivilege(Employee employee);
+
+    String checkIfTicketExistsbyID(int id);
+
+    String updateTicketPicture(int id, byte[] array);
 }
