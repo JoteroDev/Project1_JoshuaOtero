@@ -27,4 +27,8 @@ public interface EmployeeDAO {
     String checkIfTicketExistsbyID(int id);
 
     String updateTicketPicture(int id, byte[] array);
+
+    String updateEmployeePicture(int id, byte[] array);
+
+    String updateEmployeeinfo(Employee employee);
 }

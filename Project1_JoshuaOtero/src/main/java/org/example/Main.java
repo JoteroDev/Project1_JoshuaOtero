@@ -23,7 +23,9 @@ public class Main {
         app.post("/changeStatus", ticketController.updateTicket);
         app.post("/getTicketbyType", ticketController.readTicketbyType);
         app.post("/updateEmployeeAdmin", employeeController.updateAdmin);
-        app.post("/picture/{id}", employeeController.updateTicketPicture);
+        app.post("/picture/{id}", ticketController.updateTicketPicture);
+        app.post("/employeePicture/{id}", employeeController.updateEmployeePicture);
+        app.post("/employeeInfo", employeeController.updateEmployeeInfo);
         app.start();
 
 

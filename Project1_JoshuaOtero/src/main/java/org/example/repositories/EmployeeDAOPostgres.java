@@ -100,6 +100,7 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
             Employee verified = new Employee();
             verified.setId(rs.getInt("employeeid"));
             verified.setUsername(rs.getString("username"));
+            verified.setPassword(rs.getString("password"));
             verified.setAdmin(rs.getBoolean("isadmin"));
             System.out.println(rs.getBoolean("isadmin"));
             Main.currentLoggedEmployee = verified;
@@ -365,6 +366,47 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
                 return "Failed! Change did not go through!\r\nPlease make sure id# is a valid ticket!";
             } else {
                 return "Success! Picture was uploaded to ticket #"+id;
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public String updateEmployeePicture(int id, byte[] array) {
+        try(Connection conn = ConnectionFactory.getConnection()){
+            String sql = "update employee set image = ? where employeeid = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setBytes(1, array);
+            preparedStatement.setInt(2, id);
+            int rs = preparedStatement.executeUpdate();
+            if (rs == 0){
+                return "Failed! Change did not go through!\r\nPlease make sure id# is a valid employee!";
+            } else {
+                return "Success! Picture was uploaded to Employee #"+id;
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public String updateEmployeeinfo(Employee employee) {
+        try(Connection conn = ConnectionFactory.getConnection()){
+            String sql = "update employee set password = ?, name = ?, address = ?, phone = ? where employeeid = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, employee.getPassword());
+            preparedStatement.setString(2, employee.getName());
+            preparedStatement.setString(3, employee.getAddress());
+            preparedStatement.setString(4, employee.getPhoneNumber());
+            preparedStatement.setInt(5, Main.currentLoggedEmployee.getId());
+            int rs = preparedStatement.executeUpdate();
+            if (rs == 0){
+                return "Failed! Change did not go through!\r\nPlease make sure id# is a valid employee!";
+            } else {
+                return "Success! Employee #"+employee.getId() + " was updated!";
             }
         } catch(SQLException e){
             e.printStackTrace();

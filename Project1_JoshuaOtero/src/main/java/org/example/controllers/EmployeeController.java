@@ -85,41 +85,61 @@ public class EmployeeController {
         ctx.result(employeeString);
     };
 
-    public Handler updateTicketPicture = (ctx) -> {
+    public Handler updateEmployeePicture = (ctx) -> {
         if (ctx == null) {
         }
         int id = Integer.parseInt(ctx.pathParam("id"));
         EmployeeDAOPostgres employeeDAOPostgres = new EmployeeDAOPostgres();
-        String employeeString = employeeDAOPostgres.checkIfTicketExistsbyID(id);
-        byte[] array = ctx.bodyAsBytes();
-        if(employeeString == null){
+        if (Main.currentLoggedEmployee == null){
             ctx.status(400);
-            ctx.result("Not a valid ticket number!");
+            ctx.result("You are not logged in!");
+        } else if(Main.currentLoggedEmployee.getId() != id){
+            ctx.status(400);
+            ctx.result("You cannot upload a profile picture to an account that does not belong to you!\r\nCheck if the id input matches your employee id, which is " + Main.currentLoggedEmployee.getId());
         } else {
-            switch (employeeString){
-                case "You cannot upload images for ticket's that don't belong to you.":
-                case "Not logged in!":
-                case "This ticket was already approved or denied!":
-                    ctx.status(400);
-                    ctx.result(employeeString);
-                    break;
-                default:
-                    if (array == null){
-                        ctx.status(400);
-                        ctx.result("No file was detected!");
-                    } else {
-                        ctx.status(200);
-                        employeeString = employeeDAOPostgres.updateTicketPicture(id, array);
-                        // These lines of code create the image and put it into the resources file.
-//                        System.out.println(array);
-//                        ByteArrayInputStream bis = new ByteArrayInputStream(array);
-//                        BufferedImage bImage = ImageIO.read(bis);
-//                        ImageIO.write(bImage, "jpg", new File("ticketExample.jpg"));
-                        ctx.result(employeeString);
-                    }
-
+            byte[] array = ctx.bodyAsBytes();
+            if (array == null){
+                ctx.status(400);
+                ctx.result("No file was detected!");
+            } else {
+                ctx.status(200);
+                String employeeString = employeeDAOPostgres.updateEmployeePicture(id, array);
+                ctx.result(employeeString);
             }
         }
+
+
+
+    };
+
+    public Handler updateEmployeeInfo = (ctx) -> {
+        if (ctx == null) {
+        }
+        if (Main.currentLoggedEmployee == null){
+            ctx.status(400);
+            ctx.result("You are not logged in!");
+        } else {
+            String json = ctx.body();
+            Gson gson = new Gson();
+            Employee employee = (Employee) gson.fromJson(json, Employee.class);
+            employee.setUsername(Main.currentLoggedEmployee.getUsername());
+            employee.setAdmin(Main.currentLoggedEmployee.isAdmin());
+            employee.setId(Main.currentLoggedEmployee.getId());
+            if (employee.getPassword() == null){
+                employee.setPassword(Main.currentLoggedEmployee.getPassword());
+            }
+            EmployeeDAOPostgres employeeDAOPostgres = new EmployeeDAOPostgres();
+            String employeeString = employeeDAOPostgres.updateEmployeeinfo(employee);
+            if (Main.currentLoggedEmployee == null){
+                ctx.status(400);
+                ctx.result("You are not logged in!");
+            } else{
+                ctx.status(201);
+                ctx.result(employeeString);
+            }
+        }
+
+
 
 
     };
