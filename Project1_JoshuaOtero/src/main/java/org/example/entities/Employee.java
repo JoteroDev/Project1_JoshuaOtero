@@ -11,7 +11,6 @@ public class Employee {
     String name;
     String address;
     String phoneNumber;
-    List<Ticket> pendingTickets = new ArrayList<>();
 
     boolean isAdmin;
 
@@ -64,13 +63,6 @@ public class Employee {
         this.phoneNumber = phoneNumber;
     }
 
-    public List<Ticket> getPendingTickets() {
-        return pendingTickets;
-    }
-
-    public void setPendingTickets(List<Ticket> pendingTickets) {
-        this.pendingTickets = pendingTickets;
-    }
 
     public boolean isAdmin() {
         return isAdmin;
@@ -94,10 +86,6 @@ public class Employee {
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-//                ", name='" + name + '\'' +
-//                ", address='" + address + '\'' +
-//                ", phoneNumber='" + phoneNumber + '\'' +
-                ", pendingTickets=" + pendingTickets +
                 ", isAdmin=" + isAdmin +
                 '}';
     }

@@ -7,11 +7,15 @@ import org.example.entities.Employee;
 import org.example.repositories.EmployeeDAOPostgres;
 import org.example.service.EmployeeService;
 import org.example.service.EmployeeServiceImpl;
+import org.example.service.TicketService;
+import org.example.service.TicketServicelmpl;
 
 public class Main {
     public static Employee currentLoggedEmployee;
 
     public static EmployeeService employeeService = new EmployeeServiceImpl(new EmployeeDAOPostgres());
+
+    public static TicketService ticketService = new TicketServicelmpl(new EmployeeDAOPostgres());
     public static void main(String[] args) {
         Javalin app = Javalin.create();
         EmployeeController employeeController = new EmployeeController();

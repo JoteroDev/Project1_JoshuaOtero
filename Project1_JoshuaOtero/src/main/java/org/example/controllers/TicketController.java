@@ -2,8 +2,15 @@ package org.example.controllers;
 
 import com.google.gson.Gson;
 import io.javalin.http.Handler;
+import org.example.Main;
 import org.example.entities.Ticket;
 import org.example.repositories.EmployeeDAOPostgres;
+import org.postgresql.shaded.com.ongres.scram.common.bouncycastle.base64.Base64;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
 
 public class TicketController {
     public Handler createTicket = (ctx) -> {
@@ -69,7 +76,7 @@ public class TicketController {
         Gson gson = new Gson();
         Ticket ticket = (Ticket) gson.fromJson(json, Ticket.class);
         EmployeeDAOPostgres employeeDAOPostgres = new EmployeeDAOPostgres();
-        String ticketString = employeeDAOPostgres.changeStatus(ticket.getId(), ticket.getStatus());
+        String ticketString = Main.ticketService.changeStatus(ticket.getId(), ticket.getStatus());
         switch (ticketString){
             case"This ticket has already been approved and cannot been changed.":
             case"This ticket has already been denied and cannot been changed.":
@@ -114,7 +121,10 @@ public class TicketController {
 //                        ByteArrayInputStream bis = new ByteArrayInputStream(array);
 //                        BufferedImage bImage = ImageIO.read(bis);
 //                        ImageIO.write(bImage, "jpg", new File("ticketExample.jpg"));
-                        ctx.result(ticketString);
+                        String HTML_FORMAT = "<img src=\"data:image/jpeg;base64,%1$s\" />";
+                        String b64Image = Base64.toBase64String(array);
+                        String html = String.format(HTML_FORMAT, b64Image);
+                        ctx.result(html);
                     }
 
             }
