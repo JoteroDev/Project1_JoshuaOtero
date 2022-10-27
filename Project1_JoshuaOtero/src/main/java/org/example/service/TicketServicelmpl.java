@@ -66,7 +66,7 @@ public class TicketServicelmpl implements TicketService{
         } else if(array.length == 0) {
             throw new RuntimeException("No picture was sent.");
         }else {
-            String savedTicket = this.employeeDAO.checkIfTicketExistsbyID(id);
+            String savedTicket = this.employeeDAO.updateTicketPicture(id, array);
             return savedTicket;
         }
     }

@@ -21,8 +21,8 @@ public class TicketController {
         Ticket ticket = (Ticket) gson.fromJson(json, Ticket.class);
         Ticket registeredTicket = Main.ticketService.createTicket(ticket);
         if (registeredTicket == null){
-            ctx.status(401);
-            ctx.result("Please make sure you are logged in and have entered an Amount, Description, and Type");
+            ctx.status(400);
+            ctx.result("Please make sure you have entered an Amount, Description, and Type");
         } else {
             ctx.status(201);
             ctx.result("Ticket #"+registeredTicket.getId()+ " has been registered!");
@@ -93,7 +93,6 @@ public class TicketController {
         if (ctx == null) {
         }
         int id = Integer.parseInt(ctx.pathParam("id"));
-        EmployeeDAOPostgres employeeDAOPostgres = new EmployeeDAOPostgres();
         String ticketString = Main.ticketService.checkIfTicketExistsbyID(id);
         byte[] array = ctx.bodyAsBytes();
         if(ticketString == null){

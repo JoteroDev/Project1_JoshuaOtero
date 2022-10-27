@@ -118,6 +118,7 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
                     ticket.setDescription(rs.getString("description"));
                     ticket.setStatus(ticket.getStatus().valueOf(rs.getString("status")));
                     ticket.setType(rs.getString("type"));
+                    ticket.setImage(rs.getBytes("image"));
                     tickets.add(ticket);
                 }
                 return tickets;
@@ -135,6 +136,7 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
                     ticket.setDescription(rs.getString("description"));
                     ticket.setStatus(ticket.getStatus().valueOf(rs.getString("status")));
                     ticket.setType(rs.getString("type"));
+                    ticket.setImage(rs.getBytes("image"));
                     tickets.add(ticket);
                 }
                 return tickets;
@@ -166,6 +168,8 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
                     ticket.setDescription(rs.getString("description"));
                     ticket.setStatus(ticket.getStatus().valueOf(rs.getString("status")));
                     ticket.setType(rs.getString("type"));
+                    ticket.setImage(rs.getBytes("image"));
+                    System.out.println(ticket.getImage());
                     tickets.add(ticket);
                 }
                 String jsonString = "";
@@ -187,6 +191,7 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
                     ticket.setDescription(rs.getString("description"));
                     ticket.setStatus(ticket.getStatus().valueOf(rs.getString("status")));
                     ticket.setType(rs.getString("type"));
+                    ticket.setImage(rs.getBytes("image"));
                     tickets.add(ticket);
                 }
                 String jsonString = "";

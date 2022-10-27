@@ -1,5 +1,7 @@
 package org.example.entities;
 
+import org.postgresql.shaded.com.ongres.scram.common.bouncycastle.base64.Base64;
+
 public class Ticket {
 
     int id;
@@ -10,6 +12,8 @@ public class Ticket {
     Status status = Status.PENDING;
 
     String type;
+
+    byte[] image;
 
     public Ticket() {
     }
@@ -70,8 +74,25 @@ public class Ticket {
         this.type = type;
     }
 
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
     @Override
     public String toString() {
+        String html;
+        if (image != null){
+            String HTML_FORMAT = "<img src=\"data:image/jpeg;base64,%1$s\" />";
+            String b64Image = Base64.toBase64String(image);
+            html = String.format(HTML_FORMAT, b64Image);
+        } else {
+            html = "No image";
+        }
+
         return "Ticket{" +
                 "id=" + id +
                 ", user='" + user + '\'' +
@@ -79,6 +100,7 @@ public class Ticket {
                 ", description='" + description + '\'' +
                 ", status='" + status + '\'' +
                 ", type='" + type + '\'' +
+                ", image='" + html + '\'' +
                 '}';
     }
 }
