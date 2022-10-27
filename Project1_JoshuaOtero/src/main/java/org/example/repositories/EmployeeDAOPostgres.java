@@ -207,7 +207,7 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
     }
 
     @Override
-    public String changeStatus(int ticketID, Status status) {
+    public String updateTicketStatus(int ticketID, Status status) {
         if (Main.currentLoggedEmployee == null){
             return "Not logged in!";
         } else if(!Main.currentLoggedEmployee.isAdmin()){

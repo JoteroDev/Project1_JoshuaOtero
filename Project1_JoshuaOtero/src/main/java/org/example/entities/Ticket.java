@@ -88,19 +88,40 @@ public class Ticket {
         if (image != null){
             String HTML_FORMAT = "<img src=\"data:image/jpeg;base64,%1$s\" />";
             String b64Image = Base64.toBase64String(image);
-            html = String.format(HTML_FORMAT, b64Image);
+            html = "<img id=\"ticketImage\" src=\"data:image/jpg;base64, "+b64Image+"\"width=\"150\" height=\"150\"";
         } else {
             html = "No image";
         }
+        String statusString = "";
+        if (status.equals(Status.APPROVED)){
+            statusString = "<p style = \"color:green;\"> "+status+"</p>";
+        } else if(status.equals(Status.DENIED)){
+            statusString = "<p style = \"color:red;\"> "+status+"</p>";
+        } else {
+            statusString = "<p style = \"color:#E3B032;\"> "+status+"</p>";
+        }
 
-        return "Ticket{" +
-                "id=" + id +
-                ", user='" + user + '\'' +
-                ", amount='" + amount + '\'' +
-                ", description='" + description + '\'' +
-                ", status='" + status + '\'' +
-                ", type='" + type + '\'' +
-                ", image='" + html + '\'' +
-                '}';
+        return "<style>\n" +
+                "table, th, td {\n" +
+                "  border:1px solid black;\n" +
+                "}\n" +
+                "</style>" +
+                "<table style=\"width:100%\"> " +
+                "<tr>\n" +
+                "    <th>Ticket#</th>\n" +
+                "    <th>User</th>\n" +
+                "    <th>Amount</th>\n" +
+                "    <th>Description</th>\n" +
+                "    <th>Status</th>\n" +
+                "    <th>Picture</th>\n" +
+                "  </tr>" +
+                "<tr>\n" +
+                "    <td><center>"+ id+"\n</center>" +
+                "    <td><center>"+ user+"\n</center>" +
+                "    <td><center>"+ amount +"</center></td>\n" +
+                "    <td><center>"+ description +"</center></td>\n" +
+                "    <td><center>"+ statusString +"</center></td>\n" +
+                "    <td><center>"+ html +"</center></td>\n" +
+                "  </tr>";
     }
 }

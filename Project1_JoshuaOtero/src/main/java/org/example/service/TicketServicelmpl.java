@@ -1,6 +1,5 @@
 package org.example.service;
 
-import org.example.entities.Employee;
 import org.example.entities.Status;
 import org.example.entities.Ticket;
 import org.example.repositories.EmployeeDAO;
@@ -16,8 +15,12 @@ public class TicketServicelmpl implements TicketService{
     public Ticket createTicket(Ticket ticket ) {
         if (ticket.getDescription().length() == 0) {
             throw new RuntimeException("description cannot be empty");
-        } else if (ticket.getAmount().length() == 0) {
+        } else if (ticket.getDescription().length() > 100) {
+            throw new RuntimeException("Description was too long!");
+        }else if (ticket.getAmount().length() == 0) {
             throw new RuntimeException("amount cannot be empty");
+        }else if (ticket.getAmount().length() > 10) {
+            throw new RuntimeException("amount was too long!");
         } else {
             Ticket savedTicket = this.employeeDAO.createTicket(ticket);
             return savedTicket;
@@ -31,7 +34,7 @@ public class TicketServicelmpl implements TicketService{
         } else if (status.equals(Status.PENDING)) {
             throw new RuntimeException("Cannot change a ticket to pending.");
         } else {
-            String savedTicket = this.employeeDAO.changeStatus(ticketID, status);
+            String savedTicket = this.employeeDAO.updateTicketStatus(ticketID, status);
             return savedTicket;
         }
     }

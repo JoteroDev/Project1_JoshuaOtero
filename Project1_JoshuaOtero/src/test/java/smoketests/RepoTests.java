@@ -1,24 +1,20 @@
 package smoketests;
 
-import io.javalin.http.Context;
-import org.example.Main;
-import org.example.controllers.EmployeeController;
 import org.example.entities.Employee;
+import org.example.entities.Status;
 import org.example.entities.Ticket;
-import org.example.repositories.EmployeeDAO;
 import org.example.repositories.EmployeeDAOPostgres;
+import org.example.repositories.EmployeeDAO;
 import org.example.service.EmployeeService;
 import org.example.service.EmployeeServiceImpl;
 import org.example.service.TicketService;
 import org.example.service.TicketServicelmpl;
-import org.example.utils.ConnectionFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+import org.junit.jupiter.api.function.Executable;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+
 import java.util.ArrayList;
 
 import static org.mockito.Mockito.*;
@@ -88,4 +84,37 @@ public class RepoTests {
         employee.setPhoneNumber("2012223333");
         Assertions.assertEquals(employeeService.updateEmployeeinfo(employee), "Success! Employee #"+employee.getId() + " was updated!");
     }
+
+    @Test
+    @Order(6)
+    void change_ticket_status_test() {
+        Ticket ticket = new Ticket();
+        ticket.setStatus(Status.APPROVED);
+        ticket.setId(1);
+        when(employeeDAOMock.updateTicketStatus(1, Status.APPROVED)).thenReturn("Success! Ticket #1 has been updated to " + Status.APPROVED);
+        Assertions.assertEquals(ticketService.changeStatus(ticket.getId(), ticket.getStatus()), "Success! Ticket #1 has been updated to " + Status.APPROVED);
+    }
+
+
+
+    @Test
+    @Order(7)
+    void change_ticket_status_fail_test() {
+        Ticket ticket = new Ticket();
+        ticket.setStatus(Status.PENDING);
+        ticket.setId(1);
+        when(employeeDAOMock.updateTicketStatus(1, Status.APPROVED)).thenReturn("Success! Ticket #1 has been updated to " + Status.APPROVED);
+        Assertions.assertThrows(RuntimeException.class, new Executable() {
+            @Override
+            public void execute() throws Throwable {
+                Assertions.assertEquals(ticketService.changeStatus(ticket.getId(), ticket.getStatus()), "Success! Ticket #1 has been updated to " + Status.APPROVED);
+            }
+        });
+
+
+    }
+
+
+
+
 }

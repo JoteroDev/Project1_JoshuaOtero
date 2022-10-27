@@ -5,7 +5,6 @@ import org.example.entities.Status;
 import org.example.entities.Ticket;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public interface EmployeeDAO {
     Employee createEmployee(Employee employee);
@@ -18,7 +17,7 @@ public interface EmployeeDAO {
 
     String employeeGetTickets();
 
-    String changeStatus(int ticketID, Status status);
+    String updateTicketStatus(int ticketID, Status status);
 
     String readTicketsbyType(String type);
 
