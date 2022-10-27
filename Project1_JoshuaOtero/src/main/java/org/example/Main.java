@@ -29,7 +29,8 @@ public class Main {
         app.post("/updateEmployeeAdmin", employeeController.updateAdmin);
         app.post("/picture/{id}", ticketController.updateTicketPicture);
         app.post("/employeePicture/{id}", employeeController.updateEmployeePicture);
-        app.post("/employeeInfo", employeeController.updateEmployeeInfo);
+        app.post("/employeeupdate", employeeController.updateEmployeeInfo);
+        app.get("/employeeInfo", employeeController.readEmployeeProfile);
         app.start();
 
 

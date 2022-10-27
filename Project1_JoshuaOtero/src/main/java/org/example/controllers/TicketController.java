@@ -55,8 +55,6 @@ public class TicketController {
     public Handler viewTickets = (ctx) -> {
         if (ctx == null) {
         }
-        String json = ctx.body();
-        Gson gson = new Gson();
         EmployeeDAOPostgres employeeDAOPostgres = new EmployeeDAOPostgres();
         String tickets = employeeDAOPostgres.employeeGetTickets();
         if (tickets.equals("Not logged in!")){

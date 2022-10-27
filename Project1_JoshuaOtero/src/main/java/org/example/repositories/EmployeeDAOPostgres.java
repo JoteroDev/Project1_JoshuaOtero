@@ -101,8 +101,10 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
             verified.setId(rs.getInt("employeeid"));
             verified.setUsername(rs.getString("username"));
             verified.setPassword(rs.getString("password"));
+            verified.setPhoneNumber(rs.getString("phone"));
+            verified.setAddress(rs.getString("address"));
+            verified.setImage(rs.getBytes("image"));
             verified.setAdmin(rs.getBoolean("isadmin"));
-            System.out.println(rs.getBoolean("isadmin"));
             Main.currentLoggedEmployee = verified;
             if (verified.isAdmin()){
                 sql = "select * from ticket where Status = ?";
@@ -418,4 +420,5 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
         }
         return null;
     }
+
 }

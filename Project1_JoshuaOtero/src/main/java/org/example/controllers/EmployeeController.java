@@ -135,8 +135,19 @@ public class EmployeeController {
             }
         }
 
+    };
+    public Handler readEmployeeProfile = (ctx) -> {
+        if (ctx == null) {
+        }
+        if (Main.currentLoggedEmployee == null){
+            ctx.status(400);
+            ctx.result("You are not logged in!");
+        } else {
 
+            ctx.status(201);
+            ctx.result(Main.currentLoggedEmployee.toString());
 
+        }
 
     };
 
