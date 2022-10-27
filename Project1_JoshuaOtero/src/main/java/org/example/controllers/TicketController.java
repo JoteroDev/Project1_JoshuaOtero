@@ -19,8 +19,7 @@ public class TicketController {
         String json = ctx.body();
         Gson gson = new Gson();
         Ticket ticket = (Ticket) gson.fromJson(json, Ticket.class);
-        EmployeeDAOPostgres employeeDAOPostgres = new EmployeeDAOPostgres();
-        Ticket registeredTicket = employeeDAOPostgres.createTicket(ticket);
+        Ticket registeredTicket = Main.ticketService.createTicket(ticket);
         if (registeredTicket == null){
             ctx.status(401);
             ctx.result("Please make sure you are logged in and have entered an Amount, Description, and Type");

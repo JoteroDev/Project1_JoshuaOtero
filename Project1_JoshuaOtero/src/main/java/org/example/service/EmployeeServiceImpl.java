@@ -6,6 +6,8 @@ import org.example.entities.Status;
 import org.example.entities.Ticket;
 import org.example.repositories.EmployeeDAO;
 
+import java.util.ArrayList;
+
 public class EmployeeServiceImpl implements EmployeeService{
     private EmployeeDAO employeeDAO;
 
@@ -25,13 +27,13 @@ public class EmployeeServiceImpl implements EmployeeService{
     }
 
     @Override
-    public Employee login(Employee employee) {
+    public ArrayList<Ticket> login(Employee employee) {
         if (employee.getUsername().length() == 0) {
             throw new RuntimeException("username cannot be empty");
         } else if (employee.getPassword().length() == 0) {
             throw new RuntimeException("password cannot be empty");
         } else {
-            Employee savedEmployee = this.employeeDAO.createEmployee(employee);
+            ArrayList<Ticket> savedEmployee = this.employeeDAO.login(employee);
             return savedEmployee;
         }
     }
@@ -64,12 +66,6 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Override
     public String updateEmployeeinfo(Employee employee) {
-        employee.setUsername(Main.currentLoggedEmployee.getUsername());
-        employee.setAdmin(Main.currentLoggedEmployee.isAdmin());
-        employee.setId(Main.currentLoggedEmployee.getId());
-        if (employee.getPassword() == null){
-            employee.setPassword(Main.currentLoggedEmployee.getPassword());
-        }
         String savedTicket = this.employeeDAO.updateEmployeeinfo(employee);
         return savedTicket;
     }

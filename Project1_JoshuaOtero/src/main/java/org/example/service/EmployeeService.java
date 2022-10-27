@@ -4,11 +4,13 @@ import org.example.entities.Employee;
 import org.example.entities.Status;
 import org.example.entities.Ticket;
 
+import java.util.ArrayList;
+
 public interface EmployeeService {
 
     Employee createEmployee(Employee var1);
 
-    Employee login(Employee var1);
+    ArrayList<Ticket> login(Employee var1);
 
     String updateAdminPrivilege(Employee employee);
 

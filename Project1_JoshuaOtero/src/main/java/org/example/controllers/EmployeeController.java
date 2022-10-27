@@ -44,8 +44,7 @@ public class EmployeeController {
         String json = ctx.body();
         Gson gson = new Gson();
         Employee employee = (Employee) gson.fromJson(json, Employee.class);
-        EmployeeDAOPostgres employeeDAOPostgres = new EmployeeDAOPostgres();
-        ArrayList<Ticket> newTicket = employeeDAOPostgres.login(employee);
+        ArrayList<Ticket> newTicket = Main.employeeService.login(employee);
         String jsonString = "";
         if (newTicket == null){
             jsonString = "Invalid username or password";
@@ -120,6 +119,12 @@ public class EmployeeController {
             String json = ctx.body();
             Gson gson = new Gson();
             Employee employee = (Employee) gson.fromJson(json, Employee.class);
+            employee.setUsername(Main.currentLoggedEmployee.getUsername());
+            employee.setAdmin(Main.currentLoggedEmployee.isAdmin());
+            employee.setId(Main.currentLoggedEmployee.getId());
+            if (employee.getPassword() == null){
+                employee.setPassword(Main.currentLoggedEmployee.getPassword());
+            }
             String employeeString = Main.employeeService.updateEmployeeinfo(employee);
             if (Main.currentLoggedEmployee == null){
                 ctx.status(400);
