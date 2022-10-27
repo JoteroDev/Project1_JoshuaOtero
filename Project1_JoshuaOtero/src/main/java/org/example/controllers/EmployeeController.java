@@ -69,8 +69,7 @@ public class EmployeeController {
         String json = ctx.body();
         Gson gson = new Gson();
         Employee employee = (Employee) gson.fromJson(json, Employee.class);
-        EmployeeDAOPostgres employeeDAOPostgres = new EmployeeDAOPostgres();
-        String employeeString = employeeDAOPostgres.updateAdminPrivilege(employee);
+        String employeeString = Main.employeeService.updateAdminPrivilege(employee);
         switch (employeeString){
             case "Failed! Change did not go through!\r\nPlease make sure id# is a valid employee!":
                 ctx.status(304);
@@ -89,7 +88,6 @@ public class EmployeeController {
         if (ctx == null) {
         }
         int id = Integer.parseInt(ctx.pathParam("id"));
-        EmployeeDAOPostgres employeeDAOPostgres = new EmployeeDAOPostgres();
         if (Main.currentLoggedEmployee == null){
             ctx.status(400);
             ctx.result("You are not logged in!");
@@ -103,7 +101,7 @@ public class EmployeeController {
                 ctx.result("No file was detected!");
             } else {
                 ctx.status(200);
-                String employeeString = employeeDAOPostgres.updateEmployeePicture(id, array);
+                String employeeString = Main.employeeService.updateEmployeePicture(id, array);
                 ctx.result(employeeString);
             }
         }
@@ -122,14 +120,7 @@ public class EmployeeController {
             String json = ctx.body();
             Gson gson = new Gson();
             Employee employee = (Employee) gson.fromJson(json, Employee.class);
-            employee.setUsername(Main.currentLoggedEmployee.getUsername());
-            employee.setAdmin(Main.currentLoggedEmployee.isAdmin());
-            employee.setId(Main.currentLoggedEmployee.getId());
-            if (employee.getPassword() == null){
-                employee.setPassword(Main.currentLoggedEmployee.getPassword());
-            }
-            EmployeeDAOPostgres employeeDAOPostgres = new EmployeeDAOPostgres();
-            String employeeString = employeeDAOPostgres.updateEmployeeinfo(employee);
+            String employeeString = Main.employeeService.updateEmployeeinfo(employee);
             if (Main.currentLoggedEmployee == null){
                 ctx.status(400);
                 ctx.result("You are not logged in!");

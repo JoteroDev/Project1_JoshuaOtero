@@ -37,8 +37,7 @@ public class TicketController {
         String json = ctx.body();
         Gson gson = new Gson();
         Ticket ticket = (Ticket) gson.fromJson(json, Ticket.class);
-        EmployeeDAOPostgres employeeDAOPostgres = new EmployeeDAOPostgres();
-        String newTicket = employeeDAOPostgres.readTicketsbyType(ticket.getType());
+        String newTicket = Main.ticketService.readTicketsbyType(ticket.getType());
         String jsonString = "";
         if (newTicket.equals("Not logged in!")){
             jsonString = "Please login first!";
@@ -96,7 +95,7 @@ public class TicketController {
         }
         int id = Integer.parseInt(ctx.pathParam("id"));
         EmployeeDAOPostgres employeeDAOPostgres = new EmployeeDAOPostgres();
-        String ticketString = employeeDAOPostgres.checkIfTicketExistsbyID(id);
+        String ticketString = Main.ticketService.checkIfTicketExistsbyID(id);
         byte[] array = ctx.bodyAsBytes();
         if(ticketString == null){
             ctx.status(400);
@@ -115,7 +114,7 @@ public class TicketController {
                         ctx.result("No file was detected!");
                     } else {
                         ctx.status(200);
-                        ticketString = employeeDAOPostgres.updateTicketPicture(id, array);
+                        ticketString = Main.ticketService.updateTicketPicture(id, array);
                         // These lines of code create the image and put it into the resources file.
 //                        System.out.println(array);
 //                        ByteArrayInputStream bis = new ByteArrayInputStream(array);

@@ -40,7 +40,7 @@ public class TicketServicelmpl implements TicketService{
     public String readTicketsbyType(String type) {
         if (type == null) {
             throw new RuntimeException("type cannot be empty");
-        } else if(type.equals("")){
+        } else if(type.trim().equals("")){
             throw new RuntimeException("type cannot be empty");
         }
         else {
@@ -51,11 +51,23 @@ public class TicketServicelmpl implements TicketService{
 
     @Override
     public String checkIfTicketExistsbyID(int id) {
-        return null;
+        if (id <= 0) {
+            throw new RuntimeException("Ticket number cannot be 0 or lower.");
+        } else {
+            String savedTicket = this.employeeDAO.checkIfTicketExistsbyID(id);
+            return savedTicket;
+        }
     }
 
     @Override
     public String updateTicketPicture(int id, byte[] array) {
-        return null;
+        if (id <= 0) {
+            throw new RuntimeException("Ticket number cannot be 0 or lower.");
+        } else if(array.length == 0) {
+            throw new RuntimeException("No picture was sent.");
+        }else {
+            String savedTicket = this.employeeDAO.checkIfTicketExistsbyID(id);
+            return savedTicket;
+        }
     }
 }
