@@ -27,7 +27,7 @@ public class EmployeeController {
         Employee newEmployee = Main.employeeService.createEmployee(employee);
         if (newEmployee == null) {
             ctx.status(400);
-            ctx.result("Username is taken or data entered incorrectly!\r\nPlease use the following JSON format\r\n{\r\"username\": \"Desired Username\"\r\n\"password\": \"password\"\r\n}");
+            ctx.result("Username is taken!");
         } else {
             ctx.status(201);
             ctx.result("Employee "+newEmployee.getUsername()+" has been created!");
@@ -112,6 +112,7 @@ public class EmployeeController {
             employee.setUsername(Main.currentLoggedEmployee.getUsername());
             employee.setAdmin(Main.currentLoggedEmployee.isAdmin());
             employee.setId(Main.currentLoggedEmployee.getId());
+            employee.setImage(Main.currentLoggedEmployee.getImage());
             if (employee.getPassword() == null){
                 employee.setPassword(Main.currentLoggedEmployee.getPassword());
             }
@@ -131,10 +132,8 @@ public class EmployeeController {
             ctx.status(400);
             ctx.result("You are not logged in!");
         } else {
-
             ctx.status(201);
             ctx.result(Main.currentLoggedEmployee.toString());
-
         }
 
     };

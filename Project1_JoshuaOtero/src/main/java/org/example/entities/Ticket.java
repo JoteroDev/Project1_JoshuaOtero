@@ -113,6 +113,7 @@ public class Ticket {
                 "    <th>Amount</th>\n" +
                 "    <th>Description</th>\n" +
                 "    <th>Status</th>\n" +
+                "    <th>Type</th>\n" +
                 "    <th>Picture</th>\n" +
                 "  </tr>" +
                 "<tr>\n" +
@@ -121,6 +122,7 @@ public class Ticket {
                 "    <td><center>"+ amount +"</center></td>\n" +
                 "    <td><center>"+ description +"</center></td>\n" +
                 "    <td><center>"+ statusString +"</center></td>\n" +
+                "    <td><center>"+ type +"</center></td>\n" +
                 "    <td><center>"+ html +"</center></td>\n" +
                 "  </tr>";
     }

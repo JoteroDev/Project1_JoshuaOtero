@@ -41,14 +41,8 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Override
     public String updateAdminPrivilege(Employee employee) {
-        if (employee.getUsername().length() == 0) {
-            throw new RuntimeException("username cannot be empty");
-        } else if (employee.getPassword().length() == 0) {
-            throw new RuntimeException("password cannot be empty");
-        } else {
             String savedEmployee = this.employeeDAO.updateAdminPrivilege(employee);
             return savedEmployee;
-        }
     }
 
 

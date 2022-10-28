@@ -1,14 +1,12 @@
 package smoketests;
 
+import org.eclipse.jetty.util.DateCache;
 import org.example.Main;
 import org.example.entities.Employee;
 import org.example.entities.Status;
 import org.example.entities.Ticket;
 import org.example.repositories.EmployeeDAOPostgres;
-import org.example.service.EmployeeService;
-import org.example.service.EmployeeServiceImpl;
-import org.example.service.TicketService;
-import org.example.service.TicketServicelmpl;
+import org.example.repositories.TicketDAOPostgres;
 import org.junit.jupiter.api.*;
 
 
@@ -18,6 +16,7 @@ public class RepoTests {
     }
 
     EmployeeDAOPostgres employeeDAOMock = new EmployeeDAOPostgres();
+    TicketDAOPostgres ticketDAOMock = new TicketDAOPostgres();
 
     @Test
     @Order(1)
@@ -69,7 +68,7 @@ public class RepoTests {
         ticket.setAmount("20000");
         ticket.setDescription("Moving to NY");
         ticket.setType("Travel");
-        Ticket newTicket = employeeDAOMock.createTicket(ticket);
+        Ticket newTicket = ticketDAOMock.createTicket(ticket);
         Assertions.assertEquals(newTicket.getStatus(), Status.PENDING);
     }
 
@@ -79,7 +78,7 @@ public class RepoTests {
         Ticket ticket = new Ticket();
         ticket.setDescription("Moving to NY");
         ticket.setType("Travel");
-        Ticket newTicket = employeeDAOMock.createTicket(ticket);
+        Ticket newTicket = ticketDAOMock.createTicket(ticket);
         Assertions.assertNull(newTicket);
 
     }
@@ -106,8 +105,8 @@ public class RepoTests {
         ticket.setAmount("20000");
         ticket.setDescription("Moving to NY");
         ticket.setType("Travel");
-        Ticket newTicket = employeeDAOMock.createTicket(ticket);
-        String approval = employeeDAOMock.updateTicketStatus(newTicket.getId(), Status.APPROVED);
+        Ticket newTicket = ticketDAOMock.createTicket(ticket);
+        String approval = ticketDAOMock.updateTicketStatus(newTicket.getId(), Status.APPROVED);
         Assertions.assertEquals(approval, "Success! Ticket #" + newTicket.getId() + " has been updated to " + Status.APPROVED);
     }
 
@@ -122,8 +121,8 @@ public class RepoTests {
         ticket.setAmount("20000");
         ticket.setDescription("Moving to NY");
         ticket.setType("Travel");
-        Ticket newTicket = employeeDAOMock.createTicket(ticket);
-        String denial = employeeDAOMock.updateTicketStatus(newTicket.getId(), Status.APPROVED);
+        Ticket newTicket = ticketDAOMock.createTicket(ticket);
+        String denial = ticketDAOMock.updateTicketStatus(newTicket.getId(), Status.APPROVED);
         Assertions.assertEquals(denial, "You don't have permission to edit these!");
     }
 
@@ -138,6 +137,19 @@ public class RepoTests {
         employeeDAOMock.login(employee);
         String tickets = employeeDAOMock.employeeGetTickets();
         Assertions.assertTrue(tickets.length() > 100);
+    }
+
+    @Test
+    @Order(11)
+    void cleanup_test_tickets(){
+        ticketDAOMock.deleteTicketsbyUsername("Test1");
+        ticketDAOMock.deleteTicketsbyUsername("Admin1");
+        Employee employee = new Employee();
+        employee.setUsername("Test1");
+        employee.setPassword("password");
+        employeeDAOMock.login(employee);
+        String tickets = employeeDAOMock.employeeGetTickets();
+        Assertions.assertTrue(tickets.equals(""));
 
     }
 

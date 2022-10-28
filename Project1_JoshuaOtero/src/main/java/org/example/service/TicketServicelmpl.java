@@ -3,13 +3,14 @@ package org.example.service;
 import org.example.entities.Status;
 import org.example.entities.Ticket;
 import org.example.repositories.EmployeeDAO;
+import org.example.repositories.TicketDAO;
 
 public class TicketServicelmpl implements TicketService{
 
-    private EmployeeDAO employeeDAO;
+    private TicketDAO ticketDAO;
 
-    public TicketServicelmpl(EmployeeDAO employeeDAO) {
-        this.employeeDAO = employeeDAO;
+    public TicketServicelmpl(TicketDAO ticketDAO) {
+        this.ticketDAO = ticketDAO;
     }
     @Override
     public Ticket createTicket(Ticket ticket ) {
@@ -24,7 +25,7 @@ public class TicketServicelmpl implements TicketService{
 //        } else {
 //
 //        }
-        Ticket savedTicket = this.employeeDAO.createTicket(ticket);
+        Ticket savedTicket = this.ticketDAO.createTicket(ticket);
         return savedTicket;
     }
 
@@ -35,7 +36,7 @@ public class TicketServicelmpl implements TicketService{
         } else if (status.equals(Status.PENDING)) {
             throw new RuntimeException("Cannot change a ticket to pending.");
         } else {
-            String savedTicket = this.employeeDAO.updateTicketStatus(ticketID, status);
+            String savedTicket = this.ticketDAO.updateTicketStatus(ticketID, status);
             return savedTicket;
         }
     }
@@ -48,7 +49,7 @@ public class TicketServicelmpl implements TicketService{
             throw new RuntimeException("type cannot be empty");
         }
         else {
-            String savedType = this.employeeDAO.readTicketsbyType(type);
+            String savedType = this.ticketDAO.readTicketsbyType(type);
             return savedType;
         }
     }
@@ -58,7 +59,7 @@ public class TicketServicelmpl implements TicketService{
         if (id <= 0) {
             throw new RuntimeException("Ticket number cannot be 0 or lower.");
         } else {
-            String savedTicket = this.employeeDAO.checkIfTicketExistsbyID(id);
+            String savedTicket = this.ticketDAO.checkIfTicketExistsbyID(id);
             return savedTicket;
         }
     }
@@ -70,7 +71,7 @@ public class TicketServicelmpl implements TicketService{
         } else if(array.length == 0) {
             throw new RuntimeException("No picture was sent.");
         }else {
-            String savedTicket = this.employeeDAO.updateTicketPicture(id, array);
+            String savedTicket = this.ticketDAO.updateTicketPicture(id, array);
             return savedTicket;
         }
     }
