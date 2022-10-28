@@ -14,8 +14,6 @@ import java.io.File;
 
 public class TicketController {
     public Handler createTicket = (ctx) -> {
-        if (ctx == null) {
-        }
         String json = ctx.body();
         Gson gson = new Gson();
         Ticket ticket = (Ticket) gson.fromJson(json, Ticket.class);
@@ -31,8 +29,6 @@ public class TicketController {
     };
 
     public Handler readTicketbyType = (ctx) -> {
-        if (ctx == null) {
-        }
         String json = ctx.body();
         Gson gson = new Gson();
         Ticket ticket = (Ticket) gson.fromJson(json, Ticket.class);
@@ -53,8 +49,6 @@ public class TicketController {
     };
 
     public Handler viewTickets = (ctx) -> {
-        if (ctx == null) {
-        }
         EmployeeDAOPostgres employeeDAOPostgres = new EmployeeDAOPostgres();
         String tickets = employeeDAOPostgres.employeeGetTickets();
         if (tickets.equals("Not logged in!")){
@@ -66,8 +60,6 @@ public class TicketController {
     };
 
     public Handler updateTicket = (ctx) -> {
-        if (ctx == null) {
-        }
         String json = ctx.body();
         Gson gson = new Gson();
         Ticket ticket = (Ticket) gson.fromJson(json, Ticket.class);
@@ -88,8 +80,6 @@ public class TicketController {
     };
 
     public Handler updateTicketPicture = (ctx) -> {
-        if (ctx == null) {
-        }
         int id = Integer.parseInt(ctx.pathParam("id"));
         String ticketString = Main.ticketService.checkIfTicketExistsbyID(id);
         byte[] array = ctx.bodyAsBytes();
@@ -112,10 +102,10 @@ public class TicketController {
                         ctx.status(200);
                         ticketString = Main.ticketService.updateTicketPicture(id, array);
                         // These lines of code create the image and put it into the resources file.
-//                        System.out.println(array);
-//                        ByteArrayInputStream bis = new ByteArrayInputStream(array);
-//                        BufferedImage bImage = ImageIO.read(bis);
-//                        ImageIO.write(bImage, "jpg", new File("ticketExample.jpg"));
+                        //System.out.println(array);
+                        //ByteArrayInputStream bis = new ByteArrayInputStream(array);
+                        //BufferedImage bImage = ImageIO.read(bis);
+                        //ImageIO.write(bImage, "jpg", new File("ticketExample.jpg"));
                         String HTML_FORMAT = "<img src=\"data:image/jpeg;base64,%1$s\" />";
                         String b64Image = Base64.toBase64String(array);
                         String html = String.format(HTML_FORMAT, b64Image);

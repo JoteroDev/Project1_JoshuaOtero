@@ -33,6 +33,24 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
     }
 
     @Override
+    public int deleteEmployee(Employee employee) {
+        try(Connection conn = ConnectionFactory.getConnection()){
+            String sql = "delete from employee where username = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, employee.getUsername());
+
+            preparedStatement.execute();
+
+            ResultSet resultSet = preparedStatement.getGeneratedKeys(); //Returns the id that was created
+            resultSet.next(); //you need to move the cursor to the first valid record, or you will get a null response.
+            return 0;
+        } catch(SQLException|NullPointerException e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
     public Ticket createTicket(Ticket ticket) {
         if (Main.currentLoggedEmployee == null){
             return null;
@@ -151,7 +169,7 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
     }
 
     @Override
-    public String employeeGetTickets() {
+    public String employeeGetTickets(){
         if (Main.currentLoggedEmployee == null){
             return "Not logged in!";
         }
@@ -171,7 +189,7 @@ public class EmployeeDAOPostgres implements EmployeeDAO{
                     ticket.setStatus(ticket.getStatus().valueOf(rs.getString("status")));
                     ticket.setType(rs.getString("type"));
                     ticket.setImage(rs.getBytes("image"));
-                    System.out.println(ticket.getImage());
+                    System.out.println("ID #" + ticket.getId());
                     tickets.add(ticket);
                 }
                 String jsonString = "";

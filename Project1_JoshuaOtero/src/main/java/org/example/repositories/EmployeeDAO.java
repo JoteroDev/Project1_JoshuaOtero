@@ -9,6 +9,8 @@ import java.util.ArrayList;
 public interface EmployeeDAO {
     Employee createEmployee(Employee employee);
 
+    int deleteEmployee(Employee employee);
+
     Ticket createTicket(Ticket ticket);
 
     ArrayList<Ticket> getTicketbyStatus(String status);

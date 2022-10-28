@@ -13,18 +13,19 @@ public class TicketServicelmpl implements TicketService{
     }
     @Override
     public Ticket createTicket(Ticket ticket ) {
-        if (ticket.getDescription().length() == 0) {
-            throw new RuntimeException("description cannot be empty");
-        } else if (ticket.getDescription().length() > 100) {
-            throw new RuntimeException("Description was too long!");
-        }else if (ticket.getAmount().length() == 0) {
-            throw new RuntimeException("amount cannot be empty");
-        }else if (ticket.getAmount().length() > 10) {
-            throw new RuntimeException("amount was too long!");
-        } else {
-            Ticket savedTicket = this.employeeDAO.createTicket(ticket);
-            return savedTicket;
-        }
+//        if (ticket.getDescription().length() == 0) {
+//            throw new RuntimeException("description cannot be empty");
+//        } else if (ticket.getDescription().length() > 100) {
+//            throw new RuntimeException("Description was too long!");
+//        }else if (ticket.getAmount().length() == 0) {
+//            throw new RuntimeException("amount cannot be empty");
+//        }else if (ticket.getAmount().length() > 10) {
+//            throw new RuntimeException("amount was too long!");
+//        } else {
+//
+//        }
+        Ticket savedTicket = this.employeeDAO.createTicket(ticket);
+        return savedTicket;
     }
 
     @Override

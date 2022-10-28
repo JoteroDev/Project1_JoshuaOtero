@@ -20,8 +20,6 @@ public class EmployeeController {
     }
 
     public Handler createEmployee = (ctx) -> {
-        if (ctx == null) {
-        }
         String json = ctx.body();
         Gson gson = new Gson();
         Employee employee = (Employee) gson.fromJson(json, Employee.class);
@@ -39,8 +37,6 @@ public class EmployeeController {
 
 
     public Handler login = (ctx) -> {
-        if (ctx == null) {
-        }
         String json = ctx.body();
         Gson gson = new Gson();
         Employee employee = (Employee) gson.fromJson(json, Employee.class);
@@ -63,8 +59,6 @@ public class EmployeeController {
     };
 
     public Handler updateAdmin = (ctx) -> {
-        if (ctx == null) {
-        }
         String json = ctx.body();
         Gson gson = new Gson();
         Employee employee = (Employee) gson.fromJson(json, Employee.class);
@@ -84,8 +78,6 @@ public class EmployeeController {
     };
 
     public Handler updateEmployeePicture = (ctx) -> {
-        if (ctx == null) {
-        }
         int id = Integer.parseInt(ctx.pathParam("id"));
         if (Main.currentLoggedEmployee == null){
             ctx.status(400);
@@ -110,8 +102,6 @@ public class EmployeeController {
     };
 
     public Handler updateEmployeeInfo = (ctx) -> {
-        if (ctx == null) {
-        }
         if (Main.currentLoggedEmployee == null){
             ctx.status(400);
             ctx.result("You are not logged in!");
@@ -137,8 +127,6 @@ public class EmployeeController {
 
     };
     public Handler readEmployeeProfile = (ctx) -> {
-        if (ctx == null) {
-        }
         if (Main.currentLoggedEmployee == null){
             ctx.status(400);
             ctx.result("You are not logged in!");
